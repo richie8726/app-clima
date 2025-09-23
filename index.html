@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>App del Clima</title>
+  <title>MeteoNow</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
 </head>
 <body>
   <div class="container">
-    <h1>🌤 Consulta el Clima</h1>
-    <div class="input-box">
+    <h1>🌤 MeteoNow</h1>
+
+    <div class="search-box">
       <input type="text" id="ciudadInput" placeholder="Escribí una ciudad..." />
       <button onclick="buscarClima()">Buscar</button>
-      <button id="modoToggle">🌙</button>
+      <button onclick="buscarPorUbicacion()">📍</button>
     </div>
-    <div id="resultado" class="card"></div>
+
+    <div id="resultado"></div>
+
+    <h3>📅 Pronóstico 5 días</h3>
+    <div id="forecast"></div>
+
+    <h3>🔎 Búsquedas recientes</h3>
+    <ul id="historial"></ul>
   </div>
 
   <script src="script.js"></script>

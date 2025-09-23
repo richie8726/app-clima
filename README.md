@@ -1,56 +1,42 @@
-# 🌦️ App del Clima
+# 🌤 MeteoNow
 
-Una **aplicación web simple y atractiva** desarrollada con **HTML, CSS y JavaScript**, que permite consultar el clima actual de cualquier ciudad en tiempo real usando la API de **OpenWeatherMap**.  
-Incluye **íconos dinámicos**, validación de errores, **modo claro/oscuro** y animaciones suaves.
+Un **consultor de clima moderno y atractivo** desarrollado con **HTML, CSS y JavaScript**, que permite consultar el **clima actual**, obtener el **pronóstico de 5 días**, guardar **búsquedas recientes** y usar la **geolocalización automática** del navegador.  
+Incluye **íconos dinámicos**, diseño **responsive** y está listo para **deploy en GitHub Pages**.  
 
 ---
 
 ## 🚀 Funcionalidades
 
-- 🔍 Buscar el clima de cualquier ciudad en el mundo.  
-- 🌡 Mostrar **temperatura, estado del clima, viento y humedad**.  
-- 🖼 Visualización con **íconos dinámicos** según el clima.  
-- ⚠️ Manejo de errores (ciudad vacía o no encontrada).  
-- 🌗 **Modo claro/oscuro** con un botón de cambio.  
-- ✨ Animaciones suaves para mostrar resultados.  
-- 📱 Diseño responsive (PC y móviles).  
+- 🔎 Buscar clima por ciudad.  
+- 📍 Detectar clima con **geolocalización automática**.  
+- 📊 Mostrar **clima actual** (temperatura, estado, viento).  
+- 📅 Ver **pronóstico extendido de 5 días**.  
+- 💾 Guardar y mostrar **búsquedas recientes** en LocalStorage.  
+- 🌐 **Deploy sencillo en GitHub Pages** para compartir online.  
+- 🎨 Estilo moderno con gradientes, tarjetas e íconos de **Weather Icons**.  
 
 ---
 
 ## 📂 Estructura del proyecto
 
-app-clima/  
+meteo-now/  
 │── index.html   # Estructura principal  
-│── style.css    # Estilos (claro/oscuro + responsive)  
-│── script.js    # Lógica en JavaScript (reemplazar API key)  
-│── README.md    # Documentación (este archivo)  
-│── assets/      # Capturas de pantalla (screenshot.png, screenshot1.png, ...)  
+│── style.css    # Estilos (responsive + moderno)  
+│── script.js    # Lógica de la app  
+│── README.md    # Documentación  
 
 ---
 
 ## 📸 Capturas de pantalla
 
-![Captura de la app](./assets/Captura.PNG)  
-![Captura de la app](./assets/Captura1.PNG)  
-![Captura de la app](./assets/Captura2.PNG) 
-
-
+![Captura de la app](./assets/screenshot.png)  
+![Pronóstico 5 días](./assets/screenshot-forecast.png)  
+![Historial de búsquedas](./assets/screenshot-history.png)  
 
 ---
 
 ## 🛠️ Cómo ejecutar el proyecto
 
-1. Cloná el repositorio (si aún no lo tenés local):
+1. Cloná el repositorio:  
    ```bash
-   git clone https://github.com/TU-USUARIO/app-clima.git
-
-
-📄 Licencia
-
-Proyecto con licencia MIT — libre para usar y modificar.
-
-
-👨‍💻 Autor
-
-Desarrollado por Ponce Ricardo Andrés 🚀
-Proyecto creado con fines de práctica y aprendizaje.
+   git clone https://github.com/TU-USUARIO/meteo-now.git
