@@ -1,3 +1,4 @@
+/* ==== General ==== */
 body {
   font-family: Arial, sans-serif;
   background: #dfe6e9;
@@ -6,21 +7,39 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
+  transition: background 0.3s;
 }
 
+body.dark {
+  background: #2d3436;
+  color: #fff;
+}
+
+/* ==== Container ==== */
 .container {
   text-align: center;
   background: #ffffff;
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark .container {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+/* ==== Inputs ==== */
+.input-box {
+  margin-bottom: 20px;
 }
 
 input {
   padding: 10px;
   width: 200px;
   margin-right: 10px;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 1px solid #ccc;
 }
 
@@ -29,15 +48,42 @@ button {
   background-color: #0984e3;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 button:hover {
   background-color: #74b9ff;
 }
 
-#resultado {
+/* Dark mode buttons */
+body.dark button {
+  background-color: #636e72;
+}
+
+#modoToggle {
+  margin-left: 10px;
+}
+
+/* ==== Resultados ==== */
+.card {
   margin-top: 20px;
   font-size: 18px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f1f2f6;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.dark .card {
+  background: #2c2c2c;
 }
