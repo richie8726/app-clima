@@ -165,3 +165,7 @@ body.dark{
   .card{ flex-direction:column; text-align:center; gap:10px; }
   .weather-left{ width:100%; }
 }
+/* Forzar visibilidad del forecast en modo dark */
+body.dark .forecast { background: rgba(255,255,255,0.04); color: #e6eef4; }
+body.dark .forecast-item { background: rgba(255,255,255,0.06); color: #e6eef4; border: 1px solid rgba(255,255,255,0.04); }
+body.dark .forecast-item .temp, body.dark .forecast-item div { color: #e6eef4; }
