@@ -1,43 +1,40 @@
 // netlify/functions/weather.js
-const fetch = require("node-fetch");
+const fetch = require("node-fetch"); // usamos v2, compatible con Netlify
 
-exports.handler = async function (event, context) {
-  const API_KEY = process.env.WEATHER_API_KEY; // viene de las variables en Netlify
-  const { city } = event.queryStringParameters;
-
-  if (!city) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Falta el parámetro 'city'" }),
-    };
-  }
-
+exports.handler = async (event) => {
   try {
-    // Clima actual
-    const currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=es`;
+    const API_KEY = process.env.WEATHER_API_KEY; // tu API Key como variable de entorno
+    const { city } = event.queryStringParameters;
 
-    // Pronóstico extendido 5 días
-    const forecastURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=es`;
+    if (!city) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Falta el parámetro 'city'" }),
+      };
+    }
 
-    const [currentResponse, forecastResponse] = await Promise.all([
-      fetch(currentWeatherURL),
-      fetch(forecastURL),
-    ]);
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+      city
+    )}&appid=${API_KEY}&units=metric&lang=es`;
 
-    const currentData = await currentResponse.json();
-    const forecastData = await forecastResponse.json();
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Error en la API: ${response.statusText}`);
+    }
+
+    const data = await response.json();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        current: currentData,
-        forecast: forecastData,
-      }),
+      body: JSON.stringify(data),
     };
-  } catch (err) {
+  } catch (error) {
+    console.error("Error en la función weather.js:", error);
+
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Error obteniendo datos", details: err }),
+      body: JSON.stringify({ error: "Error al obtener el clima" }),
     };
   }
 };
