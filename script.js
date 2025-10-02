@@ -20,9 +20,12 @@ window.onload = () => {
           `${API_URL}?lat=${latitude}&lon=${longitude}`
         );
         const data = await response.json();
-        if (!data.error) {
-          renderWeather(data.current, data.forecast);
+
+        if (data && !data.error) {
+          renderWeather(data.current, data.forecast || []);
           mostrarAlertas(data.alerts || []);
+        } else {
+          console.warn("Error desde función Netlify (geo):", data?.error);
         }
       } catch (error) {
         console.error("Error con geolocalización:", error);
@@ -34,23 +37,23 @@ window.onload = () => {
 // 🎯 Buscar clima con proxy o fallback local
 async function buscarClima(city) {
   try {
-    let response = await fetch(`${API_URL}?city=${city}`);
+    let response = await fetch(`${API_URL}?city=${encodeURIComponent(city)}`);
     if (!response.ok) throw new Error("Fallo en Netlify proxy");
 
     let data = await response.json();
     if (data.error) throw new Error(data.error);
 
-    renderWeather(data.current, data.forecast);
+    renderWeather(data.current, data.forecast || []);
     mostrarAlertas(data.alerts || []);
     guardarHistorial(city);
   } catch (error) {
-    console.warn("Usando fallback con config.js...");
+    console.warn("Usando fallback con config.js...", error.message);
     if (typeof apiKey !== "undefined") {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}&lang=es`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&appid=${apiKey}&lang=es`
       );
       const data = await response.json();
-      renderWeather(data.list[0], data.list);
+      renderWeather(data.list[0], data.list || []);
       mostrarAlertas([]);
       guardarHistorial(city);
     } else {
@@ -61,6 +64,11 @@ async function buscarClima(city) {
 
 // 🎯 Renderizar clima
 function renderWeather(current, forecast) {
+  if (!current || !current.main) {
+    console.warn("Datos de clima incompletos:", current);
+    return;
+  }
+
   const weatherResult = document.getElementById("weather-result");
   weatherResult.innerHTML = `
     <h2>${current.name || "Ubicación actual"}</h2>
@@ -71,7 +79,7 @@ function renderWeather(current, forecast) {
   `;
 
   setWeatherAnimation(current.weather[0].icon, current.weather[0].id);
-  renderForecast(forecast);
+  if (forecast && forecast.length > 0) renderForecast(forecast);
 }
 
 // 🎯 Renderizar pronóstico extendido
@@ -80,15 +88,14 @@ function renderForecast(forecast) {
   forecastContainer.innerHTML = "";
 
   forecast.slice(0, 5).forEach((item) => {
+    if (!item.main || !item.weather) return;
     const date = new Date(item.dt_txt);
     const day = date.toLocaleDateString("es-ES", { weekday: "short" });
 
     forecastContainer.innerHTML += `
       <div class="forecast-item">
         <p>${day}</p>
-        <img src="https://openweathermap.org/img/wn/${
-          item.weather[0].icon
-        }@2x.png" alt="icono clima">
+        <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="icono clima">
         <p>${Math.round(item.main.temp)}°C</p>
       </div>
     `;
