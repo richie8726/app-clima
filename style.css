@@ -1,5 +1,3 @@
-/* style.css */
-
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
@@ -8,18 +6,11 @@ body {
   color: #333;
   transition: background 0.5s, color 0.5s;
 }
-
-h1 {
-  font-size: 2.5rem;
-  margin: 20px;
-}
-
-#app {
+.topbar, .main, .footer {
   max-width: 800px;
   margin: auto;
   padding: 20px;
 }
-
 input {
   padding: 10px;
   width: 60%;
@@ -27,7 +18,6 @@ input {
   border-radius: 8px;
   border: 1px solid #ccc;
 }
-
 button {
   padding: 10px 20px;
   border: none;
@@ -36,25 +26,21 @@ button {
   border-radius: 8px;
   cursor: pointer;
 }
-
 button:hover {
   background: #005ec2;
 }
-
-#weather-result,
-#forecast,
-#alerts {
+.weather-result {
   margin-top: 20px;
 }
-
-/* Forecast */
-#forecast {
+.forecast {
+  margin-top: 20px;
+}
+.forecast-grid {
   display: flex;
   justify-content: center;
   gap: 15px;
   flex-wrap: wrap;
 }
-
 .forecast-item {
   background: rgba(255, 255, 255, 0.2);
   padding: 10px;
@@ -63,54 +49,17 @@ button:hover {
   color: inherit;
   transition: background 0.3s;
 }
-
 .forecast-item img {
   width: 50px;
   height: 50px;
 }
-
-/* Alertas */
-.alert {
+.alertbox {
+  margin-top: 10px;
+  padding: 10px;
   background: rgba(255, 100, 100, 0.8);
   color: #fff;
-  margin: 10px 0;
-  padding: 15px;
-  border-radius: 12px;
+  border-radius: 8px;
 }
-
-/* --- Animaciones de clima --- */
-.clear {
-  background: linear-gradient(to right, #56ccf2, #2f80ed);
-  color: #fff;
+.hidden {
+  display: none;
 }
-
-.clouds {
-  background: linear-gradient(to right, #bdc3c7, #2c3e50);
-  color: #fff;
-}
-
-.rain {
-  background: linear-gradient(to right, #00c6ff, #0072ff);
-  color: #fff;
-}
-
-.storm {
-  background: linear-gradient(to right, #232526, #414345);
-  color: #fff;
-}
-
-.snow {
-  background: linear-gradient(to right, #e0eafc, #cfdef3);
-  color: #333;
-}
-
-.night {
-  background: linear-gradient(to right, #141e30, #243b55);
-  color: #eee;
-}
-
-.night .forecast-item {
-  background: rgba(255, 255, 255, 0.15);
-  color: #eee;
-}
-

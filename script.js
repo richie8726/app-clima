@@ -1,85 +1,100 @@
 // script.js
 
-const apiBase = "/.netlify/functions/weather"; // función Netlify
+const apiBase = "/.netlify/functions/weather";
 
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
+const geoBtn = document.getElementById("geoBtn");
 const weatherResult = document.getElementById("weatherResult");
+const forecastSection = document.getElementById("forecast");
+const forecastGrid = document.getElementById("forecastGrid");
+const alertBox = document.getElementById("alertBox");
 
-// Buscar por ciudad
+// Evento búsqueda por ciudad
 searchBtn.addEventListener("click", () => {
   const city = cityInput.value.trim();
-  if (city === "") {
-    alert("Por favor, ingresa una ciudad");
+  if (!city) {
+    alert("Ingresa una ciudad");
     return;
   }
-
-  getWeatherByCity(city);
+  fetchWeather({ city });
 });
 
-// Buscar por geolocalización
-document.getElementById("geoBtn").addEventListener("click", () => {
+// Evento geolocalización
+geoBtn.addEventListener("click", () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        getWeatherByCoords(latitude, longitude);
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        fetchWeather({ lat: latitude, lon: longitude });
       },
-      (error) => {
-        console.error(error);
+      (err) => {
+        console.error("Error geolocalización:", err);
         alert("No se pudo obtener tu ubicación");
       }
     );
   } else {
-    alert("La geolocalización no es soportada por este navegador.");
+    alert("Geolocalización no soportada");
   }
 });
 
-// --- Funciones auxiliares ---
+async function fetchWeather({ city, lat, lon }) {
+  try {
+    let url = apiBase;
+    if (city) {
+      url += `?city=${encodeURIComponent(city)}`;
+    } else if (lat != null && lon != null) {
+      url += `?lat=${lat}&lon=${lon}`;
+    } else {
+      alert("Parámetros inválidos");
+      return;
+    }
 
-function getWeatherByCity(city) {
-  const url = `${apiBase}?city=${encodeURIComponent(city)}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => renderWeather(data))
-    .catch((err) => console.error("Error:", err));
-}
+    const res = await fetch(url);
+    const data = await res.json();
 
-function getWeatherByCoords(lat, lon) {
-  const url = `${apiBase}?lat=${lat}&lon=${lon}`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => renderWeather(data))
-    .catch((err) => console.error("Error:", err));
-}
+    if (data.error) {
+      throw new Error(data.error);
+    }
 
-function renderWeather(data) {
-  if (!data || data.error) {
-    weatherResult.innerHTML = `<p>No se encontró información del clima.</p>`;
-    return;
+    displayWeather(data);
+  } catch (err) {
+    console.error("Error en fetchWeather:", err);
+    alertBox.textContent = err.message || "Error de configuración";
+    alertBox.classList.remove("hidden");
   }
+}
 
-  const current = data.current;
-  const forecast = data.forecast;
+function displayWeather(data) {
+  // Ocultar alert box si estaba visible
+  alertBox.classList.add("hidden");
 
+  const { current, forecast } = data;
+
+  // Mostrar clima actual
   weatherResult.innerHTML = `
-    <h2>Clima en ${current.name}</h2>
-    <p><strong>Temperatura:</strong> ${current.main.temp}°C</p>
-    <p><strong>Humedad:</strong> ${current.main.humidity}%</p>
-    <p><strong>Condición:</strong> ${current.weather[0].description}</p>
-
-    <h3>Pronóstico</h3>
-    <ul>
-      ${forecast
-        .slice(0, 5)
-        .map(
-          (item) => `
-        <li>
-          ${new Date(item.dt * 1000).toLocaleString()}: 
-          ${item.main.temp}°C, ${item.weather[0].description}
-        </li>`
-        )
-        .join("")}
-    </ul>
+    <h2>${current.name}</h2>
+    <p>${current.weather[0].description}</p>
+    <p>🌡️ ${Math.round(current.main.temp)}°C</p>
+    <p>💧 Humedad: ${current.main.humidity}%</p>
   `;
+
+  // Mostrar pronóstico (hasta 5)
+  if (forecast && Array.isArray(forecast) && forecast.length > 0) {
+    forecastSection.classList.remove("hidden");
+    forecastGrid.innerHTML = "";
+    forecast.slice(0, 5).forEach((it) => {
+      const date = new Date(it.dt * 1000);
+      const day = date.toLocaleDateString("es-ES", { weekday: "short" });
+      forecastGrid.innerHTML += `
+        <div class="forecast-item">
+          <p>${day}</p>
+          <img src="https://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png" alt="icon">
+          <p>${Math.round(it.main.temp)}°C</p>
+        </div>
+      `;
+    });
+  } else {
+    forecastSection.classList.add("hidden");
+  }
 }

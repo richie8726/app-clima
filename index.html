@@ -4,27 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SkyCast ☁️</title>
-
-  <!-- Fuentes e íconos -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- Weather Icons (clases usadas) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
     <header class="topbar">
       <h1 class="brand">SkyCast</h1>
-
       <div class="controls">
         <select id="lang-select" title="Idioma">
           <option value="es">🇪🇸 Español</option>
           <option value="en">🇺🇸 English</option>
         </select>
-
         <button id="theme-toggle" title="Modo noche">🌙</button>
       </div>
     </header>
@@ -32,30 +23,21 @@
     <main class="main">
       <section class="search">
         <div class="search-row">
-          <input id="city-input" type="text" placeholder="Ingresa una ciudad..." />
-          <button id="search-btn">Buscar</button>
-          <button id="geo-btn" title="Usar mi ubicación">📍</button>
+          <input id="cityInput" type="text" placeholder="Ingresa una ciudad..." />
+          <button id="searchBtn">Buscar</button>
+          <button id="geoBtn" title="Usar mi ubicación">📍</button>
         </div>
         <div id="recentContainer" class="recent"></div>
       </section>
 
-      <!-- ALERTA -->
       <div id="alertBox" class="alertbox hidden" role="alert"></div>
 
-      <!-- CLIMA ACTUAL -->
-      <section id="weather-info" class="card hidden">
-        <div class="weather-left">
-          <div id="weatherAnim" class="weather-anim"></div>
-        </div>
-        <div class="weather-right">
-          <h2 id="loc"></h2>
-          <p id="desc" class="muted"></p>
-          <p id="temp" class="temp-large"></p>
-          <p id="extra" class="muted"></p>
+      <section class="card">
+        <div id="weatherResult" class="weather-result">
+          <!-- Aquí aparece el resultado del clima -->
         </div>
       </section>
 
-      <!-- PRONÓSTICO -->
       <section id="forecast" class="forecast hidden">
         <h3 id="forecastTitle">Pronóstico 5 días</h3>
         <div id="forecastGrid" class="forecast-grid"></div>
@@ -67,9 +49,6 @@
     </footer>
   </div>
 
-  <!-- CARGAR config.js LOCAL (no subirlo al repo) -->
-  <script src="config.js"></script>
-  <!-- Lógica -->
   <script src="script.js"></script>
 </body>
 </html>
