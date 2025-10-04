@@ -2,24 +2,29 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>☁️ SkyCast</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" type="image/svg+xml" href="">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>☁️ SkyCast</h1>
-    <button id="toggle-theme">🌙/☀️</button>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Buscar ciudad..." />
+      <button id="search-btn">🔎</button>
+    </div>
+    <button id="mode-toggle">🌙</button>
   </header>
 
   <main>
-    <form id="search-form">
-      <input type="text" id="search-input" placeholder="Buscar ciudad..." />
-      <button type="submit">Buscar</button>
-    </form>
+    <h1 id="city-name">Ciudad</h1>
+    <div class="current-weather">
+      <h2 id="temperature">--°C</h2>
+      <p id="description">Descripción</p>
+      <p id="details"></p>
+    </div>
 
-    <section id="weather-container"></section>
-    <section id="forecast-container"></section>
+    <section id="forecast" class="forecast"></section>
   </main>
 
   <footer>
