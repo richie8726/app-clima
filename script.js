@@ -1,100 +1,66 @@
-// script.js
+const searchForm = document.getElementById("search-form");
+const searchInput = document.getElementById("search-input");
+const weatherContainer = document.getElementById("weather-container");
+const forecastContainer = document.getElementById("forecast-container");
+const toggleThemeBtn = document.getElementById("toggle-theme");
 
-const apiBase = "/.netlify/functions/weather";
+let isNightMode = false;
 
-const cityInput = document.getElementById("cityInput");
-const searchBtn = document.getElementById("searchBtn");
-const geoBtn = document.getElementById("geoBtn");
-const weatherResult = document.getElementById("weatherResult");
-const forecastSection = document.getElementById("forecast");
-const forecastGrid = document.getElementById("forecastGrid");
-const alertBox = document.getElementById("alertBox");
+// ✅ Nueva ruta limpia gracias a netlify.toml
+const API_URL = "/api/weather?city=";
 
-// Evento búsqueda por ciudad
-searchBtn.addEventListener("click", () => {
-  const city = cityInput.value.trim();
-  if (!city) {
-    alert("Ingresa una ciudad");
-    return;
-  }
-  fetchWeather({ city });
-});
+searchForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const city = searchInput.value.trim();
+  if (!city) return;
 
-// Evento geolocalización
-geoBtn.addEventListener("click", () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        fetchWeather({ lat: latitude, lon: longitude });
-      },
-      (err) => {
-        console.error("Error geolocalización:", err);
-        alert("No se pudo obtener tu ubicación");
-      }
-    );
-  } else {
-    alert("Geolocalización no soportada");
-  }
-});
-
-async function fetchWeather({ city, lat, lon }) {
   try {
-    let url = apiBase;
-    if (city) {
-      url += `?city=${encodeURIComponent(city)}`;
-    } else if (lat != null && lon != null) {
-      url += `?lat=${lat}&lon=${lon}`;
-    } else {
-      alert("Parámetros inválidos");
-      return;
-    }
+    const res = await fetch(API_URL + encodeURIComponent(city));
+    if (!res.ok) throw new Error("Error al obtener datos del clima");
 
-    const res = await fetch(url);
     const data = await res.json();
-
-    if (data.error) {
-      throw new Error(data.error);
-    }
-
-    displayWeather(data);
+    renderWeather(data.current);
+    renderForecast(data.forecast);
   } catch (err) {
-    console.error("Error en fetchWeather:", err);
-    alertBox.textContent = err.message || "Error de configuración";
-    alertBox.classList.remove("hidden");
+    weatherContainer.innerHTML = `<p class="error">⚠️ No se pudo obtener el clima. Intenta nuevamente.</p>`;
+    console.error(err);
   }
+});
+
+function renderWeather(current) {
+  weatherContainer.innerHTML = `
+    <div class="weather-card">
+      <h2>${current.name}, ${current.sys.country}</h2>
+      <p class="temp">${Math.round(current.main.temp)}°C</p>
+      <p>${current.weather[0].description}</p>
+      <p>🌡️ Máx: ${Math.round(current.main.temp_max)}°C | Mín: ${Math.round(current.main.temp_min)}°C</p>
+      <p>💧 Humedad: ${current.main.humidity}%</p>
+    </div>
+  `;
 }
 
-function displayWeather(data) {
-  // Ocultar alert box si estaba visible
-  alertBox.classList.add("hidden");
-
-  const { current, forecast } = data;
-
-  // Mostrar clima actual
-  weatherResult.innerHTML = `
-    <h2>${current.name}</h2>
-    <p>${current.weather[0].description}</p>
-    <p>🌡️ ${Math.round(current.main.temp)}°C</p>
-    <p>💧 Humedad: ${current.main.humidity}%</p>
-  `;
-
-  // Mostrar pronóstico (hasta 5)
-  if (forecast && Array.isArray(forecast) && forecast.length > 0) {
-    forecastSection.classList.remove("hidden");
-    forecastGrid.innerHTML = "";
-    forecast.slice(0, 5).forEach((it) => {
-      const date = new Date(it.dt * 1000);
-      const day = date.toLocaleDateString("es-ES", { weekday: "short" });
-      forecastGrid.innerHTML += `
-        <div class="forecast-item">
-          <p>${day}</p>
-          <img src="https://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png" alt="icon">
-          <p>${Math.round(it.main.temp)}°C</p>
+function renderForecast(forecast) {
+  forecastContainer.innerHTML = forecast
+    .slice(0, 5)
+    .map((day) => {
+      const date = new Date(day.dt_txt).toLocaleDateString("es-AR", {
+        weekday: "long",
+        day: "numeric",
+        month: "short",
+      });
+      return `
+        <div class="forecast-card">
+          <h3>${date}</h3>
+          <p>${Math.round(day.main.temp)}°C</p>
+          <p>${day.weather[0].description}</p>
         </div>
       `;
-    });
-  } else {
-    forecastSection.classList.add("hidden");
-  }
+    })
+    .join("");
 }
+
+// 🌙/☀️ Alternar tema
+toggleThemeBtn.addEventListener("click", () => {
+  isNightMode = !isNightMode;
+  document.body.classList.toggle("night-mode", isNightMode);
+});

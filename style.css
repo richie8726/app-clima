@@ -1,65 +1,152 @@
-body {
+/* 🎨 Estilos base */
+* {
   margin: 0;
-  font-family: "Poppins", sans-serif;
-  text-align: center;
-  background: linear-gradient(to right, #74ebd5, #9face6);
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #e0f7fa, #80deea);
   color: #333;
-  transition: background 0.5s, color 0.5s;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
 }
-.topbar, .main, .footer {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-input {
-  padding: 10px;
-  width: 60%;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+
+h1 {
+  font-size: 1.8rem;
 }
+
 button {
-  padding: 10px 20px;
   border: none;
-  background: #0078ff;
-  color: #fff;
+  background: #00796b;
+  color: white;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
+
 button:hover {
-  background: #005ec2;
+  background: #004d40;
 }
-.weather-result {
-  margin-top: 20px;
+
+main {
+  flex: 1;
+  padding: 2rem;
+  display: grid;
+  gap: 2rem;
+  justify-items: center;
+  z-index: 1;
+  position: relative;
 }
-.forecast {
-  margin-top: 20px;
-}
-.forecast-grid {
+
+#search-form {
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 0.5rem;
 }
-.forecast-item {
-  background: rgba(255, 255, 255, 0.2);
-  padding: 10px;
-  border-radius: 12px;
-  width: 90px;
-  color: inherit;
-  transition: background 0.3s;
-}
-.forecast-item img {
-  width: 50px;
-  height: 50px;
-}
-.alertbox {
-  margin-top: 10px;
-  padding: 10px;
-  background: rgba(255, 100, 100, 0.8);
-  color: #fff;
+
+#search-input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
   border-radius: 8px;
+  min-width: 250px;
 }
-.hidden {
-  display: none;
+
+.weather-card, .forecast-card {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.weather-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.temp {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+#forecast-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  position: relative;
+}
+
+/* 🌙 Modo nocturno */
+body.night-mode {
+  background: linear-gradient(135deg, #0d1b2a, #1b263b, #212121);
+  color: #f5f5f5;
+}
+
+/* Estrellas animadas */
+body.night-mode::before, 
+body.night-mode::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 200%;
+  height: 200%;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+  animation: starsMove 60s linear infinite;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+body.night-mode::after {
+  animation-duration: 120s;
+  opacity: 0.3;
+}
+
+@keyframes starsMove {
+  from { transform: translate(0,0); }
+  to { transform: translate(-500px,-500px); }
+}
+
+body.night-mode header,
+body.night-mode footer {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+body.night-mode .weather-card,
+body.night-mode .forecast-card {
+  background: rgba(38, 50, 56, 0.9);
+  color: #e0f7fa;
+}
+
+body.night-mode button {
+  background: #0288d1;
+}
+
+body.night-mode button:hover {
+  background: #01579b;
 }

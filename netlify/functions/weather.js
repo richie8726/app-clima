@@ -1,58 +1,42 @@
-// netlify/functions/weather.js
-const fetch = require("node-fetch"); // usamos v2, compatible con Netlify
+const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
   try {
-    const API_KEY = process.env.WEATHER_API_KEY; // tu API Key como variable de entorno
-    const { city, lat, lon } = event.queryStringParameters;
+    const API_KEY = process.env.WEATHER_API_KEY;
+    const { city } = event.queryStringParameters;
 
-    if (!city && (!lat || !lon)) {
+    if (!city) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Falta el parámetro 'city' o 'lat/lon'" }),
+        body: JSON.stringify({ error: "Falta el parámetro 'city'" }),
       };
     }
 
-    // Construir URL según parámetros
-    let weatherUrl;
-    let forecastUrl;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+      city
+    )}&appid=${API_KEY}&units=metric&lang=es`;
 
-    if (city) {
-      weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Error API: ${response.statusText}`);
+    const current = await response.json();
+
+    // Pronóstico extendido
+    const forecastRes = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
         city
-      )}&appid=${API_KEY}&units=metric&lang=es`;
-
-      forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
-        city
-      )}&appid=${API_KEY}&units=metric&lang=es`;
-    } else {
-      weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`;
-
-      forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`;
-    }
-
-    // Pedir datos actuales
-    const weatherRes = await fetch(weatherUrl);
-    if (!weatherRes.ok) throw new Error(`Error en Weather API: ${weatherRes.statusText}`);
-    const current = await weatherRes.json();
-
-    // Pedir pronóstico extendido
-    const forecastRes = await fetch(forecastUrl);
-    if (!forecastRes.ok) throw new Error(`Error en Forecast API: ${forecastRes.statusText}`);
+      )}&appid=${API_KEY}&units=metric&lang=es`
+    );
     const forecast = await forecastRes.json();
 
-    // Estructura de respuesta consistente con script.js
     return {
       statusCode: 200,
       body: JSON.stringify({
         current,
-        forecast: forecast.list || [],
-        alerts: forecast.alerts || [],
+        forecast: forecast.list,
       }),
     };
   } catch (error) {
-    console.error("Error en la función weather.js:", error);
-
+    console.error("Error en weather.js:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: "Error al obtener el clima" }),

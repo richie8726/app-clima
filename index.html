@@ -1,53 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SkyCast ☁️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>☁️ SkyCast</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <h1 class="brand">SkyCast</h1>
-      <div class="controls">
-        <select id="lang-select" title="Idioma">
-          <option value="es">🇪🇸 Español</option>
-          <option value="en">🇺🇸 English</option>
-        </select>
-        <button id="theme-toggle" title="Modo noche">🌙</button>
-      </div>
-    </header>
+  <header>
+    <h1>☁️ SkyCast</h1>
+    <button id="toggle-theme">🌙/☀️</button>
+  </header>
 
-    <main class="main">
-      <section class="search">
-        <div class="search-row">
-          <input id="cityInput" type="text" placeholder="Ingresa una ciudad..." />
-          <button id="searchBtn">Buscar</button>
-          <button id="geoBtn" title="Usar mi ubicación">📍</button>
-        </div>
-        <div id="recentContainer" class="recent"></div>
-      </section>
+  <main>
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Buscar ciudad..." />
+      <button type="submit">Buscar</button>
+    </form>
 
-      <div id="alertBox" class="alertbox hidden" role="alert"></div>
+    <section id="weather-container"></section>
+    <section id="forecast-container"></section>
+  </main>
 
-      <section class="card">
-        <div id="weatherResult" class="weather-result">
-          <!-- Aquí aparece el resultado del clima -->
-        </div>
-      </section>
-
-      <section id="forecast" class="forecast hidden">
-        <h3 id="forecastTitle">Pronóstico 5 días</h3>
-        <div id="forecastGrid" class="forecast-grid"></div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <small>SkyCast · Powered by OpenWeatherMap</small>
-    </footer>
-  </div>
+  <footer>
+    <p>Desarrollado por Ricardo Andrés Ponce 🚀</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
