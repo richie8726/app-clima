@@ -18,22 +18,11 @@ exports.handler = async (event) => {
 
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Error API: ${response.statusText}`);
-    const current = await response.json();
-
-    // Pronóstico extendido
-    const forecastRes = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
-        city
-      )}&appid=${API_KEY}&units=metric&lang=es`
-    );
-    const forecast = await forecastRes.json();
+    const data = await response.json();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        current,
-        forecast: forecast.list,
-      }),
+      body: JSON.stringify(data),
     };
   } catch (error) {
     console.error("Error en weather.js:", error);
