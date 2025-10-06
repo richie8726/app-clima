@@ -106,3 +106,19 @@ footer {
 .night-mode {
   background: linear-gradient(120deg, #141E30, #243B55);
 }
+.forecast-card {
+  backdrop-filter: blur(4px);
+  text-align: center;
+}
+.forecast-card h4 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.forecast-card img {
+  width: 60px;
+  height: 60px;
+}
+.forecast-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
