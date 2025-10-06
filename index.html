@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SkyCast</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
+  <div class="app">
     <header>
-      <h1 id="app-title">SkyCast</h1>
-      <input type="text" id="city-input" placeholder="Buscar ciudad..." />
-      <button id="search-btn">Buscar</button>
+      <h1>SkyCast</h1>
+      <input type="text" id="cityInput" placeholder="Ingresa tu ciudad">
+      <button id="searchBtn">Buscar</button>
     </header>
-
     <main>
-      <section id="current-weather">
-        <div id="weather-animation"></div>
-        <div class="weather-info">
-          <h2 id="city-name"></h2>
-          <p id="temperature"></p>
-          <p id="description"></p>
+      <div id="weather">
+        <div class="current">
+          <h2 id="cityName"></h2>
+          <div id="temperature"></div>
+          <div id="description"></div>
+          <div id="icon"></div>
         </div>
-      </section>
-
-      <section id="forecast">
-        <h3>Pronóstico extendido</h3>
-        <div id="forecast-cards"></div>
-      </section>
+        <div class="forecast" id="forecast"></div>
+      </div>
+      <div id="background-svg"></div>
     </main>
   </div>
 

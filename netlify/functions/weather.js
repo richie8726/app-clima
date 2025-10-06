@@ -1,59 +1,40 @@
 const fetch = require("node-fetch");
 
-exports.handler = async function (event, context) {
+exports.handler = async function(event, context) {
   const city = event.queryStringParameters.city;
-  const API_KEY = process.env.WEATHER_API_KEY;
+  const API_KEY = process.env.API_KEY;
 
-  if (!API_KEY) {
+  if (!city) {
     return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "API_KEY no definida en Netlify" }),
+      statusCode: 400,
+      body: JSON.stringify({ error: "City parameter missing" })
     };
-  }
-
-  let url = "";
-
-  // Si la ciudad viene como lat,lng
-  if (city.includes(",")) {
-    const [lat, lon] = city.split(",");
-    url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${API_KEY}`;
-  } else {
-    // Primero obtener coordenadas por nombre de ciudad
-    const geoRes = await fetch(
-      `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
-    );
-    const geoData = await geoRes.json();
-
-    if (!geoData || geoData.length === 0) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ error: "Ciudad no encontrada" }),
-      };
-    }
-
-    const { lat, lon } = geoData[0];
-    url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${API_KEY}`;
   }
 
   try {
-    const res = await fetch(url);
-    const data = await res.json();
+    // Clima actual
+    const currentRes = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+    );
+    const currentData = await currentRes.json();
 
-    // Devolver solo lo necesario
-    const result = {
-      current: data.current,
-      daily: data.daily,
-    };
+    // Pronóstico extendido 5 días
+    const forecastRes = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`
+    );
+    const forecastData = await forecastRes.json();
 
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify({
+        current: currentData,
+        forecast: forecastData
+      })
     };
-  } catch (error) {
+  } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Error al obtener el clima" }),
+      body: JSON.stringify({ error: "Error fetching weather data" })
     };
   }
 };
-
