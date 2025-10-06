@@ -8,8 +8,8 @@ exports.handler = async (event) => {
 
   try {
     const url = city.includes(",")
-      ? `https://api.openweathermap.org/data/2.5/weather?lat=${city.split(",")[0]}&lon=${city.split(",")[1]}&appid=${API_KEY}&units=metric&lang=es`
-      : `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=es`;
+      ? `https://api.openweathermap.org/data/2.5/forecast?lat=${city.split(",")[0]}&lon=${city.split(",")[1]}&appid=${API_KEY}&units=metric&lang=es`
+      : `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=es`;
 
     const res = await fetch(url);
     const data = await res.json();
