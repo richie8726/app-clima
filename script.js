@@ -6,173 +6,133 @@ const description = document.getElementById("description");
 const details = document.getElementById("details");
 const forecastContainer = document.getElementById("forecast");
 const modeToggle = document.getElementById("mode-toggle");
-
 const favicon = document.querySelector("link[rel='icon']");
 
+let nightMode = false;
+
+// --- Función para favicon ---
 function setFavicon(night = false) {
-  if (night) {
-    favicon.href = "data:image/svg+xml," + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-        <circle cx="40" cy="24" r="14" fill="#C0C0C0"/>
-      </svg>
-    `);
+  favicon.href = night ? "assets/moon.svg" : "assets/sun.svg";
+}
+
+// --- Modo día/noche manual ---
+modeToggle.addEventListener("click", () => {
+  nightMode = !nightMode;
+  document.body.classList.toggle("night-mode", nightMode);
+  document.body.classList.toggle("day-mode", !nightMode);
+  modeToggle.textContent = nightMode ? "☀️" : "🌙";
+  setFavicon(nightMode);
+});
+
+// --- Fondo según clima ---
+function setWeatherBackground(desc) {
+  document.body.classList.remove("bg-sunny", "bg-cloudy", "bg-rainy", "bg-snowy");
+
+  desc = desc.toLowerCase();
+  if (desc.includes("sol") || desc.includes("claro")) document.body.classList.add("bg-sunny");
+  else if (desc.includes("nube")) document.body.classList.add("bg-cloudy");
+  else if (desc.includes("lluvia") || desc.includes("tormenta")) document.body.classList.add("bg-rainy");
+  else if (desc.includes("nieve")) document.body.classList.add("bg-snowy");
+}
+
+// --- Geolocalización inicial ---
+async function initWeather() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      await getWeatherByCoords(lat, lon);
+    }, () => {
+      cityName.textContent = "Busca tu ciudad...";
+    });
   } else {
-    favicon.href = "data:image/svg+xml," + encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="14" fill="#FFD93B"/>
-      </svg>
-    `);
+    cityName.textContent = "Busca tu ciudad...";
   }
 }
 
-modeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("night-mode");
-  if (document.body.classList.contains("night-mode")) {
-    modeToggle.textContent = "☀️";
-    setFavicon(true);
-  } else {
-    modeToggle.textContent = "🌙";
-    setFavicon(false);
-  }
-});
-
+// --- Obtener clima por ciudad ---
 async function getWeather(city) {
   try {
-    let response = await fetch(`/.netlify/functions/weather?city=${city}`);
-    let data;
-
-    if (response.ok) {
-      data = await response.json();
-    } else {
-      response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=es`);
-      data = await response.json();
-    }
-
-    if (!data || data.cod && data.cod != 200) {
-      cityName.textContent = "Error";
-      description.textContent = data.message || "No se pudo obtener el clima.";
-      details.textContent = "";
-      forecastContainer.innerHTML = "";
-      return;
-    }
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=es`);
+    const data = await res.json();
+    if (!data || data.cod && data.cod != 200) throw new Error(data.message || "Error API");
 
     cityName.textContent = data.name;
     temperature.textContent = `${Math.round(data.main.temp)}°C`;
     description.textContent = data.weather[0].description;
     details.textContent = `🌡️ Máx: ${Math.round(data.main.temp_max)}°C | Mín: ${Math.round(data.main.temp_min)}°C 💧 Humedad: ${data.main.humidity}%`;
 
+    setWeatherBackground(data.weather[0].description);
     await getForecast(city);
-  } catch (error) {
+  } catch(e) {
     cityName.textContent = "Error";
-    description.textContent = "No se pudo obtener el clima.";
+    description.textContent = e.message;
     details.textContent = "";
     forecastContainer.innerHTML = "";
-    console.error(error);
   }
 }
 
+// --- Obtener clima por coordenadas ---
+async function getWeatherByCoords(lat, lon) {
+  try {
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=es`);
+    const data = await res.json();
+    cityName.textContent = data.name;
+    temperature.textContent = `${Math.round(data.main.temp)}°C`;
+    description.textContent = data.weather[0].description;
+    details.textContent = `🌡️ Máx: ${Math.round(data.main.temp_max)}°C | Mín: ${Math.round(data.main.temp_min)}°C 💧 Humedad: ${data.main.humidity}%`;
+    setWeatherBackground(data.weather[0].description);
+    await getForecast(data.name);
+  } catch(e) {
+    cityName.textContent = "Error";
+    description.textContent = e.message;
+    details.textContent = "";
+    forecastContainer.innerHTML = "";
+  }
+}
+
+// --- Pronóstico extendido ---
 async function getForecast(city) {
   try {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=es`);
-    const data = await response.json();
-
-    if (!data || data.cod && data.cod !== "200" && data.cod !== 200) {
-      console.error("Error en pronóstico:", data);
-      return;
-    }
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric&lang=es`);
+    const data = await res.json();
+    if (!data || data.cod != "200") throw new Error("Error pronóstico");
 
     forecastContainer.innerHTML = "";
 
-    // Agrupar por día (ignorando hora)
     const daily = {};
-
     data.list.forEach(item => {
-      // Extraer fecha YYYY-MM-DD
       const dt = item.dt_txt.split(" ")[0];
-      if (!daily[dt]) {
-        // iniciar array de items
-        daily[dt] = [];
-      }
+      if (!daily[dt]) daily[dt] = [];
       daily[dt].push(item);
     });
 
-    // Tomar los próximos 5 días (excluyendo hoy si quieres)
-    const fechas = Object.keys(daily);
-    // Si la primera fecha es hoy, puedes descartarla o mostrarla como día 1:
-    // fechas.shift();
-
-    fechas.slice(0, 5).forEach(fecha => {
+    Object.keys(daily).slice(0,5).forEach(fecha => {
       const items = daily[fecha];
-      // Calcular mín y máx del día
-      let minTemp = Number.POSITIVE_INFINITY;
-      let maxTemp = Number.NEGATIVE_INFINITY;
-      // Elegir ícono representativo: por simplicidad el del medio
-      const midIndex = Math.floor(items.length / 2);
-      const iconItem = items[midIndex];
+      let minTemp = Math.min(...items.map(it=>it.main.temp_min));
+      let maxTemp = Math.max(...items.map(it=>it.main.temp_max));
+      const midItem = items[Math.floor(items.length/2)];
 
-      items.forEach(it => {
-        if (it.main.temp_min < minTemp) minTemp = it.main.temp_min;
-        if (it.main.temp_max > maxTemp) maxTemp = it.main.temp_max;
-      });
-
-      // Formatear nombre del día
-      const dayName = new Date(fecha).toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" });
-
+      const dayName = new Date(fecha).toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"short"});
       const card = document.createElement("div");
       card.classList.add("forecast-card");
       card.innerHTML = `
         <h4>${dayName}</h4>
-        <img src="https://openweathermap.org/img/wn/${iconItem.weather[0].icon}.png" alt="${iconItem.weather[0].description}">
+        <img src="https://openweathermap.org/img/wn/${midItem.weather[0].icon}.png" alt="${midItem.weather[0].description}">
         <p>Máx: ${Math.round(maxTemp)}°C</p>
         <p>Mín: ${Math.round(minTemp)}°C</p>
-        <p>${iconItem.weather[0].description}</p>
+        <p>${midItem.weather[0].description}</p>
       `;
-
       forecastContainer.appendChild(card);
     });
 
-  } catch (error) {
-    console.error("Error al obtener pronóstico:", error);
-  }
+  } catch(e) { console.error(e); }
 }
 
-searchBtn.addEventListener("click", () => {
-  const city = searchInput.value.trim();
-  if (city) getWeather(city);
-});
+// --- Botón búsqueda ---
+searchBtn.addEventListener("click", ()=>{ const city = searchInput.value.trim(); if(city) getWeather(city); });
+searchInput.addEventListener("keypress", (e)=>{ if(e.key==="Enter") searchBtn.click(); });
 
-searchInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") searchBtn.click();
-});
-
-// Inicial
+// --- Inicial ---
 setFavicon(false);
-getWeather("Buenos Aires");
-
-// --- NUEVO: Cambiar fondo según clima ---
-function setWeatherBackground(desc) {
-  document.body.classList.remove("bg-sunny", "bg-cloudy", "bg-rainy", "bg-snowy");
-
-  desc = desc.toLowerCase();
-  if (desc.includes("sol") || desc.includes("claro")) {
-    document.body.classList.add("bg-sunny");
-  } else if (desc.includes("nube")) {
-    document.body.classList.add("bg-cloudy");
-  } else if (desc.includes("lluvia") || desc.includes("tormenta")) {
-    document.body.classList.add("bg-rainy");
-  } else if (desc.includes("nieve")) {
-    document.body.classList.add("bg-snowy");
-  }
-}
-
-// Llamamos a la función al actualizar el clima
-const originalGetWeather = getWeather;
-getWeather = async function(city) {
-  try {
-    await originalGetWeather(city);
-    const currentDesc = description.textContent || "";
-    setWeatherBackground(currentDesc);
-  } catch (e) {
-    console.error(e);
-  }
-};
+initWeather();
