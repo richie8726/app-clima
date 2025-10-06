@@ -1,0 +1,91 @@
+diff --git a/style.css b/style.css
+index 1111111..2222222 100644
+--- a/style.css
++++ b/style.css
+@@ -86,6 +86,32 @@ footer {
+   text-align: center;
+   padding: 10px;
+   background: rgba(0,0,0,0.2);
+ }
+
+ /* Modo noche */
+ .night-mode {
+   background: linear-gradient(120deg, #141E30, #243B55);
++}
++
++/* --- NUEVOS ESTILOS ANIMADOS --- */
++
++/* Animaciones de fondo según clima */
++.bg-sunny {
++  background: linear-gradient(120deg, #f6d365, #fda085);
++  animation: sunMove 10s infinite alternate ease-in-out;
++}
++
++.bg-cloudy {
++  background: linear-gradient(120deg, #89f7fe, #66a6ff);
++  animation: cloudDrift 12s infinite alternate ease-in-out;
++}
++
++.bg-rainy {
++  background: linear-gradient(120deg, #667db6, #0082c8, #0082c8, #667db6);
++  animation: rainFlow 8s infinite alternate ease-in-out;
++}
++
++.bg-snowy {
++  background: linear-gradient(120deg, #E0EAFC, #CFDEF3);
++  animation: snowFloat 15s infinite alternate ease-in-out;
++}
++
++@keyframes sunMove { 0% {background-position: 0 0;} 100% {background-position: 100% 100%;} }
++@keyframes cloudDrift { 0% {background-position: 0 0;} 100% {background-position: 200% 200%;} }
++@keyframes rainFlow { 0% {background-position: 0 0;} 100% {background-position: 0 200%;} }
++@keyframes snowFloat { 0% {background-position: 0 0;} 100% {background-position: 100% 0;} }
++
++/* Animaciones de pronóstico */
++.forecast-card {
++  transition: transform 0.3s ease, background 0.3s ease;
++}
++.forecast-card:hover {
++  transform: translateY(-5px) scale(1.05);
++  background: rgba(255,255,255,0.3);
++}
+diff --git a/script.js b/script.js
+index 3333333..4444444 100644
+--- a/script.js
++++ b/script.js
+@@ -108,6 +108,36 @@ async function getWeather(city) {
+     getForecast(city);
+   } catch (error) {
+     cityName.textContent = "Error";
+     description.textContent = "No se pudo obtener el clima.";
+     console.error(error);
+   }
+ }
++
++// --- NUEVO: Cambiar fondo según clima ---
++function setWeatherBackground(desc) {
++  document.body.classList.remove("bg-sunny", "bg-cloudy", "bg-rainy", "bg-snowy");
++
++  desc = desc.toLowerCase();
++  if (desc.includes("sol") || desc.includes("claro")) {
++    document.body.classList.add("bg-sunny");
++  } else if (desc.includes("nube")) {
++    document.body.classList.add("bg-cloudy");
++  } else if (desc.includes("lluvia") || desc.includes("tormenta")) {
++    document.body.classList.add("bg-rainy");
++  } else if (desc.includes("nieve")) {
++    document.body.classList.add("bg-snowy");
++  }
++}
++
++// Llamamos a la función al actualizar el clima
++const originalGetWeather = getWeather;
++getWeather = async function(city) {
++  try {
++    await originalGetWeather(city);
++    const currentDesc = description.textContent || "";
++    setWeatherBackground(currentDesc);
++  } catch (e) {
++    console.error(e);
++  }
++};

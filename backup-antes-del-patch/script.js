@@ -148,31 +148,3 @@ searchInput.addEventListener("keypress", (e) => {
 // Inicial
 setFavicon(false);
 getWeather("Buenos Aires");
-
-// --- NUEVO: Cambiar fondo según clima ---
-function setWeatherBackground(desc) {
-  document.body.classList.remove("bg-sunny", "bg-cloudy", "bg-rainy", "bg-snowy");
-
-  desc = desc.toLowerCase();
-  if (desc.includes("sol") || desc.includes("claro")) {
-    document.body.classList.add("bg-sunny");
-  } else if (desc.includes("nube")) {
-    document.body.classList.add("bg-cloudy");
-  } else if (desc.includes("lluvia") || desc.includes("tormenta")) {
-    document.body.classList.add("bg-rainy");
-  } else if (desc.includes("nieve")) {
-    document.body.classList.add("bg-snowy");
-  }
-}
-
-// Llamamos a la función al actualizar el clima
-const originalGetWeather = getWeather;
-getWeather = async function(city) {
-  try {
-    await originalGetWeather(city);
-    const currentDesc = description.textContent || "";
-    setWeatherBackground(currentDesc);
-  } catch (e) {
-    console.error(e);
-  }
-};

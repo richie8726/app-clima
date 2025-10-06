@@ -122,39 +122,3 @@ footer {
   margin: 4px 0;
   font-size: 0.9rem;
 }
-/* --- NUEVOS ESTILOS ANIMADOS --- */
-
-/* Animaciones de fondo según clima */
-.bg-sunny {
-  background: linear-gradient(120deg, #f6d365, #fda085);
-  animation: sunMove 10s infinite alternate ease-in-out;
-}
-
-.bg-cloudy {
-  background: linear-gradient(120deg, #89f7fe, #66a6ff);
-  animation: cloudDrift 12s infinite alternate ease-in-out;
-}
-
-.bg-rainy {
-  background: linear-gradient(120deg, #667db6, #0082c8, #0082c8, #667db6);
-  animation: rainFlow 8s infinite alternate ease-in-out;
-}
-
-.bg-snowy {
-  background: linear-gradient(120deg, #E0EAFC, #CFDEF3);
-  animation: snowFloat 15s infinite alternate ease-in-out;
-}
-
-@keyframes sunMove { 0% {background-position: 0 0;} 100% {background-position: 100% 100%;} }
-@keyframes cloudDrift { 0% {background-position: 0 0;} 100% {background-position: 200% 200%;} }
-@keyframes rainFlow { 0% {background-position: 0 0;} 100% {background-position: 0 200%;} }
-@keyframes snowFloat { 0% {background-position: 0 0;} 100% {background-position: 100% 0;} }
-
-/* Animaciones de pronóstico */
-.forecast-card {
-  transition: transform 0.3s ease, background 0.3s ease;
-}
-.forecast-card:hover {
-  transform: translateY(-5px) scale(1.05);
-  background: rgba(255,255,255,0.3);
-}
