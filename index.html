@@ -1,42 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>☁️ SkyCast</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyCast</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h2 class="logo">☁️ SkyCast</h2>
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Buscar ciudad...">
-      <button id="search-btn">🔎</button>
-    </div>
-    <button id="mode-toggle">🌙</button>
-  </header>
+  <div id="app">
+    <header>
+      <h1 id="app-title">SkyCast</h1>
+      <input type="text" id="city-input" placeholder="Buscar ciudad..." />
+      <button id="search-btn">Buscar</button>
+    </header>
 
-  <main>
-    <section class="weather-today">
-      <div id="weather-animation"></div>
-      <h1 id="city-name">Ciudad</h1>
-      <h2 id="temperature">--°C</h2>
-      <p id="description">Descripción</p>
-      <p id="details"></p>
-    </section>
+    <main>
+      <section id="current-weather">
+        <div id="weather-animation"></div>
+        <div class="weather-info">
+          <h2 id="city-name"></h2>
+          <p id="temperature"></p>
+          <p id="description"></p>
+        </div>
+      </section>
 
-    <section class="forecast">
-      <h3>Pronóstico extendido</h3>
-      <div id="forecast"></div>
-    </section>
-  </main>
+      <section id="forecast">
+        <h3>Pronóstico extendido</h3>
+        <div id="forecast-cards"></div>
+      </section>
+    </main>
+  </div>
 
-  <footer>
-    <p>Desarrollado por Ricardo Andrés Ponce 🚀</p>
-  </footer>
-
-  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

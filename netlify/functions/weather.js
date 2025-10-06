@@ -1,48 +1,59 @@
-// Netlify Function: weather.js
-// ✅ Esta función actúa como puente entre tu front-end y la API de OpenWeather.
-// Usa tu variable de entorno WEATHER_API_KEY configurada en Netlify.
+const fetch = require("node-fetch");
 
-import fetch from "node-fetch";
+exports.handler = async function (event, context) {
+  const city = event.queryStringParameters.city;
+  const API_KEY = process.env.WEATHER_API_KEY;
 
-export async function handler(event) {
-  try {
-    const params = event.queryStringParameters;
-    const city = params.city;
-    const API_KEY = process.env.WEATHER_API_KEY;
+  if (!API_KEY) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "API_KEY no definida en Netlify" }),
+    };
+  }
 
-    if (!city) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Debe proporcionar una ciudad." }),
-      };
-    }
+  let url = "";
 
-    // Petición al endpoint de clima actual
-    const weatherResponse = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=es`
+  // Si la ciudad viene como lat,lng
+  if (city.includes(",")) {
+    const [lat, lon] = city.split(",");
+    url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${API_KEY}`;
+  } else {
+    // Primero obtener coordenadas por nombre de ciudad
+    const geoRes = await fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`
     );
+    const geoData = await geoRes.json();
 
-    if (!weatherResponse.ok) {
-      const error = await weatherResponse.json();
+    if (!geoData || geoData.length === 0) {
       return {
-        statusCode: weatherResponse.status,
-        body: JSON.stringify({ error }),
+        statusCode: 404,
+        body: JSON.stringify({ error: "Ciudad no encontrada" }),
       };
     }
 
-    const data = await weatherResponse.json();
+    const { lat, lon } = geoData[0];
+    url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${API_KEY}`;
+  }
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Devolver solo lo necesario
+    const result = {
+      current: data.current,
+      daily: data.daily,
+    };
 
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(result),
     };
-
   } catch (error) {
-    console.error("Error en función weather:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Error interno en la función del clima." }),
+      body: JSON.stringify({ error: "Error al obtener el clima" }),
     };
   }
-}
+};
+
