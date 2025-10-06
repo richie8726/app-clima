@@ -5,91 +5,111 @@
   box-sizing: border-box;
 }
 
-/* Fondo animado */
 body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  font-family: 'Segoe UI', sans-serif;
   color: #fff;
+  background: linear-gradient(120deg, #74ebd5, #ACB6E5);
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  transition: background 1s ease-in-out;
-  overflow: hidden;
+  flex-direction: column;
+  transition: background 1s ease;
 }
 
-/* Contenedor principal */
-.app {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-header input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 1rem;
-}
-
-.current {
-  position: relative;
-  z-index: 1;
-}
-
-#background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  background-size: cover;
-  opacity: 0.3;
-  transition: all 2s ease;
-}
-
-/* Pronóstico */
-#forecast {
-  margin-top: 2rem;
-}
-
-#forecast-container {
+/* Header */
+header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(6px);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.search-container {
+  display: flex;
+  gap: 8px;
+}
+
+#search-input {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  width: 180px;
+}
+
+#search-btn {
+  background: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#mode-toggle {
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* Main */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+}
+
+.weather-today h1 {
+  font-size: 2rem;
+}
+
+.weather-today h2 {
+  font-size: 3rem;
+  margin: 10px 0;
+}
+
+/* Animación SVG */
+#weather-animation {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+/* Forecast */
+.forecast {
+  margin-top: 30px;
+}
+
+#forecast {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
-.forecast-day {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 10px;
-  width: 70px;
-  transition: transform 0.3s;
-  animation: float 3s ease-in-out infinite;
+.forecast-card {
+  background: rgba(255,255,255,0.2);
+  padding: 15px;
+  border-radius: 12px;
+  width: 120px;
 }
 
-.forecast-day:hover {
-  transform: translateY(-5px);
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
+/* Footer */
 footer {
-  font-size: 0.8rem;
-  margin-top: 2rem;
-  opacity: 0.7;
+  text-align: center;
+  padding: 10px;
+  background: rgba(0,0,0,0.2);
+}
+
+/* Modo noche */
+.night-mode {
+  background: linear-gradient(120deg, #141E30, #243B55);
 }

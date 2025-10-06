@@ -5,34 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>☁️ SkyCast</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
-  <div class="app">
-    <header>
-      <h1>☁️ SkyCast</h1>
-      <input type="text" id="search" placeholder="Buscar ciudad..." />
-    </header>
+  <header>
+    <h2 class="logo">☁️ SkyCast</h2>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Buscar ciudad...">
+      <button id="search-btn">🔎</button>
+    </div>
+    <button id="mode-toggle">🌙</button>
+  </header>
 
-    <main>
-      <div class="current">
-        <div id="background"></div>
-        <h2 id="location">Error</h2>
-        <p id="description">--</p>
-        <p id="temperature">--°C</p>
-      </div>
+  <main>
+    <section class="weather-today">
+      <div id="weather-animation"></div>
+      <h1 id="city-name">Ciudad</h1>
+      <h2 id="temperature">--°C</h2>
+      <p id="description">Descripción</p>
+      <p id="details"></p>
+    </section>
 
-      <section id="forecast">
-        <h3>Pronóstico extendido</h3>
-        <div id="forecast-container"></div>
-      </section>
-    </main>
+    <section class="forecast">
+      <h3>Pronóstico extendido</h3>
+      <div id="forecast"></div>
+    </section>
+  </main>
 
-    <footer>
-      <p>Desarrollado por Ricardo Andrés Ponce 🚀</p>
-    </footer>
-  </div>
+  <footer>
+    <p>Desarrollado por Ricardo Andrés Ponce 🚀</p>
+  </footer>
 
+  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
