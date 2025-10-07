@@ -1,113 +1,222 @@
-/* style.css - Meteorologi (optimizado) */
+/* -----------------------------
+   Meteorologi - Estilos globales
+   ----------------------------- */
 
-:root{
-  --glass: rgba(255,255,255,0.08);
-  --glass-2: rgba(255,255,255,0.14);
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color:#fff;
-  background: linear-gradient(180deg,#87ceeb 0%,#74b9ff 100%);
-  transition: background 1.2s ease;
-  min-height:100vh;
-  overflow:hidden;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-/* App container */
-.app{
-  width:100%;
-  max-width:980px;
-  margin:0 auto;
-  padding:24px;
+body {
+  background: linear-gradient(to bottom, #0b2948, #143b5e, #1d4d77);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  transition: background 1s ease;
+  overflow-x: hidden;
 }
 
-/* Header */
-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-#app-title{
-  font-size:1.6rem;
-  font-weight:700;
-  letter-spacing:1px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-.search{display:flex;gap:8px;align-items:center}
-#cityInput{
-  padding:8px 12px;
-  border-radius:10px;
-  border:none;
-  width:220px;
-  outline:none;
-  background:var(--glass);
-  color:white;
-}
-#searchBtn{
-  padding:8px 12px;
-  border-radius:10px;
-  border:none;
-  cursor:pointer;
-  background:rgba(0,0,0,0.35);
-  color:white;
+header {
+  width: 100%;
+  text-align: left;
+  padding: 20px 40px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
-/* Main area */
-main#main{
-  margin-top:18px;
-  position:relative;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+/* -----------------------------
+   Barra de búsqueda
+   ----------------------------- */
+
+.search-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  width: 100%;
 }
 
-/* Current weather */
-#current{backdrop-filter: blur(6px); background:var(--glass); padding:16px;border-radius:12px; width:100%; max-width:720px; text-align:center}
-#cityName{font-size:1.4rem;font-weight:700}
-#temperature{font-size:2.6rem;font-weight:700;margin-top:6px}
-#description{opacity:0.95;margin-top:6px}
-#icon img{width:90px;height:90px;margin-top:8px}
-
-/* Forecast */
-#extended{width:100%; margin-top:18px; text-align:center}
-.forecast{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  margin-top:12px;
-  flex-wrap:wrap;
-}
-.day{
-  background:var(--glass-2);
-  padding:10px;
-  border-radius:10px;
-  width:92px;
-  text-align:center;
-  transition:transform .25s ease, background .2s;
-}
-.day:hover{ transform: translateY(-6px); background: rgba(255,255,255,0.18); }
-
-/* Background SVG */
-#background-svg{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
+.search-box input {
+  width: 280px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  font-size: 1rem;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: 0.3s;
 }
 
-/* SVG sizing */
-#background-svg img, #background-svg svg{ width:100%; height:100%; display:block; object-fit:cover; }
+.search-box input::placeholder {
+  color: #cfd8dc;
+}
 
-/* small screens */
-@media(max-width:520px){
-  #cityInput{width:140px}
-  #icon img{width:70px;height:70px}
-  #temperature{font-size:2rem}
+.search-box button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 0 10px 10px 0;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.search-box button:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* -----------------------------
+   Contenedor principal del clima
+   ----------------------------- */
+
+.weather-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  width: 340px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(6px);
+  transition: background 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ícono del clima (fix aplicado) */
+.weather-icon {
+  position: relative;
+  width: clamp(90px, 10vw, 150px);
+  height: clamp(90px, 10vw, 150px);
+  margin: 0 auto 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.weather-icon svg {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  object-fit: contain;
+}
+
+/* -----------------------------
+   Detalles del clima
+   ----------------------------- */
+
+.temperature {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #d0e4f2;
+  text-transform: capitalize;
+}
+
+/* -----------------------------
+   Pronóstico extendido
+   ----------------------------- */
+
+.forecast {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.forecast-day {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  width: 90px;
+  padding: 10px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.forecast-day:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px);
+}
+
+.forecast-day .day {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.forecast-day .temp {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* -----------------------------
+   Fondos animados dinámicos
+   ----------------------------- */
+
+.bg-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.bg-animation::before,
+.bg-animation::after {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  animation: rotateBg 60s linear infinite;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 60%);
+}
+
+@keyframes rotateBg {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* -----------------------------
+   Adaptabilidad
+   ----------------------------- */
+
+@media (max-width: 480px) {
+  header {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .search-box input {
+    width: 200px;
+  }
+
+  .weather-box {
+    width: 300px;
+    padding: 20px;
+  }
+
+  .forecast-day {
+    width: 80px;
+  }
 }
