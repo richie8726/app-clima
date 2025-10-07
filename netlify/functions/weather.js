@@ -1,52 +1,44 @@
 // netlify/functions/weather.js
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
-export const handler = async (event) => {
-  const API_KEY = process.env.API_KEY;
-  const { city } = event.queryStringParameters;
+exports.handler = async function (event) {
+  const query = event.queryStringParameters || {};
+  const city = query.city || "";
+  // check both possible env var names for compatibility
+  const API_KEY = process.env.API_KEY || process.env.WEATHER_API_KEY || process.env.APIKEY;
 
   if (!API_KEY) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Falta la API_KEY en las variables de entorno." }),
+      body: JSON.stringify({ error: "API key no configurada en Netlify. Añadir API_KEY o WEATHER_API_KEY." })
     };
   }
 
   if (!city) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: "No se especificó ninguna ciudad." }),
+      body: JSON.stringify({ error: "Falta parámetro city" })
     };
   }
 
   try {
-    // Llamado a OpenWeatherMap (clima actual + pronóstico)
-    const currentRes = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=es&appid=${API_KEY}`
-    );
-    const forecastRes = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&lang=es&appid=${API_KEY}`
-    );
-
+    // current weather
+    const currentRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=es&appid=${API_KEY}`);
     const current = await currentRes.json();
+    // forecast 5-day (3hr steps)
+    const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=es&appid=${API_KEY}`);
     const forecast = await forecastRes.json();
 
-    // Validación de respuesta
-    if (current.cod !== 200) {
-      return {
-        statusCode: current.cod,
-        body: JSON.stringify({ error: current.message }),
-      };
+    if (current.cod && current.cod !== 200) {
+      return { statusCode: current.cod || 500, body: JSON.stringify({ error: current.message || 'Error al obtener clima actual' }) };
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ current, forecast }),
+      body: JSON.stringify({ current, forecast })
     };
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Error obteniendo datos del clima", details: err.message }),
-    };
+    console.error("weather function error:", err);
+    return { statusCode: 500, body: JSON.stringify({ error: "Error interno al obtener datos de OpenWeather" }) };
   }
 };

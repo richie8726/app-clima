@@ -1,5 +1,1 @@
-<!-- favicon.svg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle id="sun" cx="32" cy="32" r="14" fill="#FFD93B"/>
-  <circle id="moon" cx="40" cy="24" r="14" fill="#C0C0C0" visibility="hidden"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" fill="#FFD93B"/></svg>

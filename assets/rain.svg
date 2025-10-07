@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="transparent"/>
+  <ellipse cx="50" cy="35" rx="30" ry="14" fill="#9fb7c8" opacity="0.95"/>
+  <line x1="30" y1="50" x2="30" y2="80" stroke="#00c6fb" stroke-width="2">
+    <animate attributeName="y1" values="50;80;50" dur="1s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="70;110;70" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="50" y1="50" x2="50" y2="78" stroke="#00c6fb" stroke-width="2">
+    <animate attributeName="y1" values="40;80;40" dur="1.1s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="68;120;68" dur="1.1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="70" y1="50" x2="70" y2="80" stroke="#00c6fb" stroke-width="2">
+    <animate attributeName="y1" values="48;82;48" dur="0.9s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="76;118;76" dur="0.9s" repeatCount="indefinite"/>
+  </line>
+</svg>

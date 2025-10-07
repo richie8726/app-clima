@@ -1,23 +1,14 @@
 {
-  "name": "app-clima",
+  "name": "meteorologi",
   "version": "1.0.0",
-  "description": "Aplicación web moderna para consultar el clima actual y pronóstico extendido de 5 días, desarrollada con **HTML, CSS y JavaScript** usando la API de [OpenWeatherMap](https://openweathermap.org/).",
-  "main": "config.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/richie8726/app-clima.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/richie8726/app-clima/issues"
-  },
-  "homepage": "https://github.com/richie8726/app-clima#readme",
+  "description": "Meteorologi - App de clima con SVG animados",
+  "main": "script.js",
   "dependencies": {
     "node-fetch": "^2.7.0"
-  }
+  },
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "author": "Richie",
+  "license": "MIT"
 }

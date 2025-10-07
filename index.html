@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkyCast</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meteorologi</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
     <header>
-      <h1>SkyCast</h1>
-      <input type="text" id="cityInput" placeholder="Ingresa tu ciudad">
-      <button id="searchBtn">Buscar</button>
-    </header>
-    <main>
-      <div id="weather">
-        <div class="current">
-          <h2 id="cityName"></h2>
-          <div id="temperature"></div>
-          <div id="description"></div>
-          <div id="icon"></div>
-        </div>
-        <div class="forecast" id="forecast"></div>
+      <h1 id="app-title">Meteorologi</h1>
+      <div class="search">
+        <input id="cityInput" type="text" placeholder="Ingresa una ciudad..." />
+        <button id="searchBtn">Buscar</button>
       </div>
-      <div id="background-svg"></div>
+    </header>
+
+    <main id="main">
+      <section id="current">
+        <h2 id="cityName">--</h2>
+        <div id="temperature"></div>
+        <div id="description"></div>
+        <div id="icon"></div>
+      </section>
+
+      <section id="extended">
+        <h3>Pronóstico extendido</h3>
+        <div id="forecast" class="forecast"></div>
+      </section>
+
+      <!-- contenedor donde pondremos el SVG animado de fondo -->
+      <div id="background-svg" aria-hidden="true"></div>
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
